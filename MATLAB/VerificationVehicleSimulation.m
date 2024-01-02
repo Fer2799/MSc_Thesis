@@ -3,7 +3,7 @@
 % applying MOEAs
 % ------------------------------
 
-model = 'DivideNConquer';
+model = 'FCHEV';
 load_system(model);
 
 a = {'sms', 'imia', 'pimia'};

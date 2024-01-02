@@ -3,28 +3,26 @@
 % ------------------------------
 
 % =========================
-id = 1;  % Identification number of the NUC
+lambda = 1600;  % Identification of the partition
 % =========================
 
 
 % Initial declared parameters
-n_vars = 6;  % Number of decision variables
+n_vars = 5;  % Number of decision variables
 n_obj = 2;  % Number of objectives
-n_ind = 4e2;  % Number of total simulations
-n_sim = n_ind/5;  % Number of simulations per NUC
+n_ind = 2e3;  % Number of total simulations
 x_Vlu = [100 400];  % Battery voltage
 x_Qlu = [4 100];  %  Battery capacity
 x_Nlu = [0.5 10];  % Differential gear ratio
 x_Rlu = [0.28 0.38];  % Wheel radius
 x_PMlu = [40 150];  % Maximum power of the motor
-L_Mlu = [1600 2500];  % Overall mass of the vehicle
-part = 1e1;  % Subset of experiments per run
-run("LHSdesign.m")
+part = 5e2;  % Subset of experiments per run
+run("LatinHypercubeSampling_Extra.m")
 
-model = 'DivideNConquer';
+model = 'FCHEV';
 load_system(model);
 
-for num = 5:1:n_sim/part
+for num = 1:1:n_ind/part
     simIn(1:part) = Simulink.SimulationInput(model);
 
     for index = 1:1:part
@@ -56,10 +54,8 @@ for num = 5:1:n_sim/part
 
     l_limit = (num - 1) * part + 1;
     h_limit = num * part;
-    file = strcat('id', int2str(id), '_part', int2str(num), '_ind', int2str(part), '.txt');
+    file = strcat('lambda', int2str(lambda), '_part', int2str(num), '_ind', int2str(part), '.txt');
     writematrix(experiments(l_limit:h_limit,:), file)
 
     clearvars simOut simIn;
 end
-
-
